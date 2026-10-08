@@ -1,1 +1,68 @@
 @import "tailwindcss";
+
+@theme {
+  /* FONTE */
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+
+  /* CORES */
+  --color-brand: #067037;
+  --color-brand-opacity: rgb(6 112 55 / 0.8);
+
+  --color-alert: #e32e31;
+  --color-alert-opacity: rgb(227 46 49 / 0.8);
+
+  --color-success: #1d0dab;
+  --color-success-opacity: rgb(29 13 171 / 0.8);
+
+  --color-grey-0: #2e2e2e;
+  --color-grey-1: #565656;
+  --color-grey-2: #919191;
+  --color-grey-3: #d0d0d0;
+
+  /* TIPOGRAFIA */
+  --text-title-1: 60px;
+  --text-title-1--font-weight: 700;
+  --text-title-2: 48px;
+  --text-title-2--font-weight: 700;
+  --text-title-3: 32px;
+  --text-title-3--font-weight: 700;
+
+  --text-text-1: 20px;
+  --text-text-1--font-weight: 400;
+  --text-text-2: 18px;
+  --text-text-2--font-weight: 400;
+
+  --text-caption-1: 14px;
+  --text-caption-1--font-weight: 400;
+  --text-caption-2: 12px;
+  --text-caption-2--font-weight: 400;
+}
+
+/* Estilos completos (tamanho + peso + cor) em uma classe só */
+@utility title-1 {
+  @apply text-title-1 text-grey-0;
+}
+
+@utility title-2 {
+  @apply text-title-2 text-grey-0;
+}
+
+@utility title-3 {
+  @apply text-title-3 text-grey-0;
+}
+
+@utility text-1 {
+  @apply text-text-1 text-grey-0;
+}
+
+@utility text-2 {
+  @apply text-text-2 text-grey-0;
+}
+
+@utility caption-1 {
+  @apply text-caption-1 text-grey-1;
+}
+
+@utility caption-2 {
+  @apply text-caption-2 text-grey-1;
+}
