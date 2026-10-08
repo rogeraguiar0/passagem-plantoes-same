@@ -1,41 +1,103 @@
 # Passagem de Plantões SAME
 
-## Pré-requisitos
+<div align="center">
+  <img src="https://img.shields.io/badge/Status-Empreendimento-orange" alt="Status do projeto" />
+  <img src="https://img.shields.io/badge/Stack-React%20%2B%20Vite-61DAFB" alt="Stack do projeto" />
+  <img src="https://img.shields.io/badge/Tipo-Web%20App-4CAF50" alt="Tipo do projeto" />
+</div>
 
-Para executar o projeto localmente, instale:
+> Este projeto foi pensado para facilitar a organização e visualização da passagem de plantões do SAME, com foco em rapidez, clareza e usabilidade.
 
-- **Node.js** (versão LTS), que inclui o **npm**.
-- **Git**, caso vá clonar o projeto do repositório.
+## Visão geral
+
+A aplicação oferece uma estrutura simples para gerenciar e acompanhar a distribuição de plantões, tornando a consulta e a organização das informações mais práticas para o uso diário.
+
+### ✅ Principais objetivos
+
+- Organização visual das informações principais;
+- Facilidade na visualização dos plantões;
+- Estrutura clara para leitura e navegação;
+- Experiência mais amigável em telas de uso frequente.
+
+## 🔧 Pré-requisitos
+
+Antes de iniciar, certifique-se de ter instalado:
+
+- **Node.js** LTS, com suporte ao **npm**;
+- **Git** para clonar o repositório;
 - Um navegador atualizado.
 
-Verifique a instalação pelo terminal:
+Verifique se tudo está correto no terminal:
 
 ```bash
 node --version
 npm --version
 ```
 
-## Instalar e executar
+## 🚀 Instalar e executar
 
-1. Abra o terminal na pasta do projeto. Se ainda não tiver os arquivos, clone o repositório e acesse a pasta:
+### 1) Clone o projeto
 
-	```bash
-	git clone git@github.com:rogeraguiar0/passagem-plantoes-same.git
-	cd passagem-plantoes-same
-	```
+```bash
+git clone git@github.com:rogeraguiar0/passagem-plantoes-same.git
+cd passagem-plantoes-same
+```
 
-2. Na pasta que contém `package.json`, instale as dependências:
+### 2) Instale as dependências
 
-	```bash
-	npm install
-	```
+```bash
+npm install
+```
 
-3. Inicie o projeto usando o script de desenvolvimento:
+### 3) Inicie o ambiente de desenvolvimento
 
-	```bash
-	npm run dev
-	```
+```bash
+npm run dev
+```
 
-4. Consulte o endereço exibido no terminal e abra-o no navegador. Em projetos Vite, o endereço padrão costuma ser `http://localhost:5173`.
+### 4) Acesse a aplicação
 
-Para encerrar o servidor, pressione `Ctrl+C` no terminal. Se o comando `npm run dev` não existir, confira os scripts declarados em `package.json` e use o comando indicado pelo projeto (por exemplo, `npm start`).
+Abra o endereço exibido no terminal no navegador. Em projetos Vite, normalmente o acesso é:
+
+```text
+http://localhost:5173
+```
+
+## 📌 Comandos úteis
+
+| Comando | Descrição |
+| --- | --- |
+| `npm install` | Instala todas as dependências do projeto |
+| `npm run dev` | Inicia o servidor local em modo de desenvolvimento |
+| `npm run build` | Gera a versão de produção |
+| `npm run preview` | Visualiza a build final localmente |
+
+## 🧩 Estrutura do projeto
+
+```text
+passagem-plantoes-same/
+├── public/
+├── src/
+├── index.html
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+├── README.md
+└── ...
+```
+
+## 🛠️ Dicas de uso
+
+- Use `Ctrl + C` para encerrar o servidor local;
+- Se `npm run dev` não estiver disponível, verifique os scripts em `package.json`.
+
+## 📎 Resumo rápido
+
+Para executar localmente:
+
+```bash
+npm install
+npm run dev
+```
+
+Com isso, o projeto estará disponível no navegador para uso e testes locais.
