@@ -14,10 +14,10 @@
   --color-success: #1d0dab;
   --color-success-opacity: rgb(29 13 171 / 0.8);
 
-  --color-grey-0: #2e2e2e;
-  --color-grey-1: #565656;
-  --color-grey-2: #919191;
-  --color-grey-3: #d0d0d0;
+  --color-gray-0: #2e2e2e;
+  --color-gray-1: #565656;
+  --color-gray-2: #919191;
+  --color-gray-3: #d0d0d0;
 
   /* TIPOGRAFIA */
   --text-title-1: 60px;
@@ -40,29 +40,29 @@
 
 /* Estilos completos (tamanho + peso + cor) em uma classe só */
 @utility title-1 {
-  @apply text-title-1 text-grey-0;
+  @apply text-title-1 text-gray-0;
 }
 
 @utility title-2 {
-  @apply text-title-2 text-grey-0;
+  @apply text-title-2 text-gray-0;
 }
 
 @utility title-3 {
-  @apply text-title-3 text-grey-0;
+  @apply text-title-3 text-gray-0;
 }
 
 @utility text-1 {
-  @apply text-text-1 text-grey-0;
+  @apply text-text-1 text-gray-0;
 }
 
 @utility text-2 {
-  @apply text-text-2 text-grey-0;
+  @apply text-text-2 text-gray-0;
 }
 
 @utility caption-1 {
-  @apply text-caption-1 text-grey-1;
+  @apply text-caption-1 text-gray-1;
 }
 
 @utility caption-2 {
-  @apply text-caption-2 text-grey-1;
+  @apply text-caption-2 text-gray-1;
 }
