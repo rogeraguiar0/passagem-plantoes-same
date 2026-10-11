@@ -20,9 +20,9 @@ function App() {
 
   return (
     <div className="flex">
-      <Sidebar setPage={setPage} />
+      <Sidebar page={page} setPage={setPage} />
 
-      <main className="w-full h-screen overflow-auto">
+      <main className="w-full h-screen overflow-auto flex justify-between">
         {actualPage}
       </main>
     </div>

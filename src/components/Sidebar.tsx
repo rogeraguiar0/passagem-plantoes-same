@@ -2,7 +2,11 @@ import type { SidebarProps } from "../types"
 import { Info } from "lucide-react"
 import Logo from "../assets/logo.png"
 
-export function Sidebar({ setPage }: SidebarProps) {
+export function Sidebar({ page, setPage }: SidebarProps) {
+  const handleButtonColor = (buttonPage: string) => {
+    return page === buttonPage ? "text-brand font-bold" : "caption-2 cursor-pointer"
+  }
+
   return (
     <div className="flex flex-col justify-between h-screen md:w-fit border-r border-gray-3">
       <div className="flex flex-col gap-4">
@@ -12,11 +16,19 @@ export function Sidebar({ setPage }: SidebarProps) {
 
         <nav className="flex flex-col gap-8 items-start caption-1 p-6">
           <div className="flex flex-col gap-2 items-start">
-            <button onClick={() => setPage("lastShift")}>Último Plantão</button>
-            <button onClick={() => setPage("allShifts")}>Todos os Plantões</button>
-            <button onClick={() => setPage("dashboard")}>Dashboard</button>
+            <button className={handleButtonColor("lastShift")} onClick={() => setPage("lastShift")}>
+              Último Plantão
+            </button>
+            <button className={handleButtonColor("allShifts")} onClick={() => setPage("allShifts")}>
+              Todos os Plantões
+            </button>
+            <button className={handleButtonColor("dashboard")} onClick={() => setPage("dashboard")}>
+              Dashboard
+            </button>
           </div>
-          <button onClick={() => setPage("options")}>Opções</button>
+          <button className={handleButtonColor("options")} onClick={() => setPage("options")}>
+            Opções
+          </button>
         </nav>
       </div>
 
