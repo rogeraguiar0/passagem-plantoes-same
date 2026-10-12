@@ -16,7 +16,7 @@ function App() {
   const [page, setPage] = useState("lastShift")
 
   const pages: Record<string, JSX.Element> = {
-    lastShift: <LastShift />,
+    lastShift: <LastShift setDialog={setDialog} />,
     allShifts: <AllShifts setDialog={setDialog} />,
     dashboard: <Dashboard />,
     options: <Options />
