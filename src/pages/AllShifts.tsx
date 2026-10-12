@@ -13,7 +13,7 @@ let entryMock = [
     healthInsurance: "Unimed",
     doctor: "Dr. Gente Boa",
     description: "Convênio aceitou atendimento, mas negou a internação. Paciente aguardando leito.",
-    status: "completed",
+    status: "concluded",
     observations: [
       {
         id: "uuid1",

@@ -2,10 +2,10 @@ import { useState } from "react";
 import type { DialogEntryDetailProps } from "../types";
 import { formatDateTime } from "../utils/date";
 import { Select } from "./Select";
-import { Input } from "./Input";
+import { Check, SendHorizontal, X } from "lucide-react";
 
 export function DialogEntryDetail({ entry }: DialogEntryDetailProps) {
-  const [collaboratorToComment, setColaboratorToComment] = useState("");
+  const [collaboratorToComment, setColaboratorToComment] = useState("")
 
   const handleCollaboratorChange = (value: string) => {
     setColaboratorToComment(value)
@@ -14,11 +14,11 @@ export function DialogEntryDetail({ entry }: DialogEntryDetailProps) {
   const handlePriorityColor = (priority: number) => {
     switch (priority) {
       case 1:
-        return "text-text text-sm"
+        return "text-text"
       case 2:
-        return "text-alert text-sm"
+        return "text-alert"
       default:
-        return "text-success text-sm"
+        return "text-success"
     }
   }
 
@@ -33,10 +33,12 @@ export function DialogEntryDetail({ entry }: DialogEntryDetailProps) {
     }
   }
 
-  const handleStatusChange = (status: string) => {
+  const [statusValue, setStatusValue] = useState(entry.status)
+
+  const handleStatusChange = () => {
     // API ROUTE
     // Chamada para atualizar o status do lançamento no backend
-    console.log(`Status atualizado para: ${status}`)
+    console.log(`Status atualizado para: ${statusValue}`)
   }
 
   return (
@@ -45,12 +47,12 @@ export function DialogEntryDetail({ entry }: DialogEntryDetailProps) {
         <p className={handlePriorityColor(entry.priority)}>
           {handlePriorityText(entry.priority)}
         </p>
-        <Select onChange={(e) => handleCollaboratorChange(e.target.value)} options={[{ value: "", label: "Quem está aí?" }, { value: "Marina", label: "Marina" }, { value: "Marcilene", label: "Marcilene" }, { value: "Camila", label: "Camila" }, { value: "Letícia", label: "Letícia" }, { value: "Róger", label: "Róger" }]} />
+        <Select onChange={(e) => handleCollaboratorChange(e.target.value)} options={[{ value: "", label: "Quem está aí?" }, { value: "Marina", label: "Marina" }, { value: "Marcilene", label: "Marcilene" }, { value: "Camila", label: "Camila" }, { value: "Letícia", label: "Letícia" }, { value: "Róger", label: "Róger" }, { value: "Julia", label: "Julia" }, { value: "Yasnaia", label: "Yasnaia" }]} />
       </div>
 
       <div className="flex justify-between gap-12">
-        <div className="flex flex-col gap-8">
-          <div className="flex justify-between gap-4">
+        <div className="flex flex-4 flex-col gap-8">
+          <div className="flex items-center gap-8">
             <div className="flex flex-col">
               <p className="caption-1">Plantonista</p>
               <p>{entry.colaborator}</p>
@@ -76,27 +78,74 @@ export function DialogEntryDetail({ entry }: DialogEntryDetailProps) {
 
           <div>
             <p className="caption-1">Descrição</p>
-            <p>{entry.description}</p>
+            <p className="caption-1 text-black">{entry.description}</p>
           </div>
         </div>
-        {entry.observations && entry.observations.length > 0 && (
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-col gap-4">
-              <p className="caption-1">Observações</p>
-              {entry.observations.map((observation) => (
+        <div className="flex flex-2 flex-col gap-4">
+          <div className="flex flex-col">
+            <p className="caption-1">Observações</p>
+            {entry.observations && entry.observations.length > 0 ?
+              (entry.observations.map((observation) => (
                 <div key={observation.id} className="flex flex-col">
-                  <p className="caption-2">{observation.colaborator} - {formatDateTime(observation.createdAt)}</p>
+                  <p className="caption-2"><span className="text-gray-0">{observation.colaborator}</span> - {formatDateTime(observation.createdAt)}</p>
                   <p className="caption-1">{observation.content}</p>
                 </div>
-              ))}
-            </div>
-            {collaboratorToComment !== "" && <Input placeholder="Insira sua observação..." />}
+              )))
+              : (
+                <p className="caption-2">Sem observações no momento...</p>
+              )}
           </div>
-        )}
+          {collaboratorToComment !== "" && (
+            <div className="slide-down-in w-full flex gap-2">
+              <textarea
+                className="w-full text-black caption-1 rounded-lg border bg-white px-2 py-1 text-grey-0 outline-none placeholder:text-gray-2 disabled:cursor-not-allowed disabled:bg-grey-3/30 resize-none h-32"
+                placeholder="Insira sua observação..."
+                id="observation"
+                name="observation"
+              />
+              <button className="cursor-pointer hover:bg-brand-opacity transition-colors p-1.75 rounded-lg bg-brand text-white h-fit">
+                <SendHorizontal className="w-5 h-5" />
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-      <div>
+      {collaboratorToComment !== "" && (
+        <div className="slide-down-in space-y-2">
+          <p className="caption-1">Status do lançamento</p>
 
-      </div>
+          <div className="space-y-1">
+            <div className="flex items-center gap-1">
+              <div className="relative">
+                <input
+                  className="h-5 w-5 shrink-0 cursor-pointer appearance-none rounded border border-gray-400 bg-white bg-center bg-no-repeat checked:border-alert checked:bg-alert"
+                  checked={statusValue === "pending"}
+                  onChange={() => setStatusValue("pending")}
+                  type="radio"
+                  name="status"
+                  id="pending"
+                />
+                <X className="cursor-pointer text-white w-4 h-4 absolute pointer-events-none top-0.5 left-0.5" />
+              </div>
+              <label className="cursor-pointer text-2" htmlFor="pending">Pendente</label>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="relative">
+                <input
+                  className="h-5 w-5 shrink-0 cursor-pointer appearance-none rounded border border-gray-400 bg-white bg-center bg-no-repeat checked:border-success checked:bg-success"
+                  checked={statusValue === "concluded"}
+                  onChange={() => setStatusValue("concluded")}
+                  type="radio"
+                  name="status"
+                  id="concluded"
+                />
+                <Check className="cursor-pointer text-white w-4 h-4 absolute pointer-events-none top-0.5 left-0.5" />
+              </div>
+              <label className="cursor-pointer text-2" htmlFor="concluded">Concluído</label>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

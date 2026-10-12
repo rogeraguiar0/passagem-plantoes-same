@@ -6,7 +6,7 @@ export function Dialog({ dialog }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null)
 
   const closeDialog = () => {
-    dialog.onClose && dialog.onClose()
+    dialog.onClose?.()
   }
 
   useEffect(() => {
@@ -19,14 +19,13 @@ export function Dialog({ dialog }: DialogProps) {
   return (
     <dialog
       ref={ref}
-      onClose={dialog.onClose} // dispara com Esc e com close()
+      onClose={dialog.onClose}
       onClick={(e) => {
-        // clique no backdrop (fora do conteúdo) fecha
         if (e.target === ref.current) closeDialog()
       }}
-      className="m-auto w-fit max-w-4xl rounded-2xl bg-white p-0 shadow-xl backdrop:bg-black/50"
+      className="animated-dialog m-auto w-fit max-w-4xl rounded-2xl bg-white p-0 shadow-xl"
     >
-      <div className="flex flex-col">
+      <div className="flex flex-col max-h-124">
         <header className="p-4 gap-4 flex items-center justify-between border-b border-gray-3">
           {dialog.title && <h2 className="text-1 font-bold whitespace-nowrap">{dialog.title}</h2>}
           <button
@@ -39,7 +38,7 @@ export function Dialog({ dialog }: DialogProps) {
           </button>
         </header>
 
-        <div className="text-2 p-4">{dialog.children}</div>
+        <div className="text-2 p-4 overflow-y-auto">{dialog.children}</div>
       </div>
     </dialog>
   )
