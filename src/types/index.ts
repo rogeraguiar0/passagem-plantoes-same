@@ -5,6 +5,30 @@ export interface SidebarProps {
   setPage: React.Dispatch<React.SetStateAction<string>>
 }
 
+// Status Field
+
+export interface StatusFieldProps {
+  value: string
+  onChange: (status: string) => void
+}
+
+// Dialog
+
+export interface DialogProps {
+  dialog: DialogContent
+}
+
+export interface DialogEntryDetailProps {
+  entry: ShiftEntry
+}
+
+export interface DialogContent {
+  isOpen: boolean
+  title?: string
+  children?: React.ReactNode
+  onClose?: () => void
+}
+
 // Shift Entry
 
 export interface ShiftEntry {
@@ -17,10 +41,26 @@ export interface ShiftEntry {
   healthInsurance?: string
   doctor?: string
   description: string
+  status: string
+  observations?: Observation[]
+}
+
+export interface Observation {
+  id: string
+  colaborator: string
+  createdAt: string
+  content: string
 }
 
 // Card
 
 export interface CardProps {
   entry: ShiftEntry
+  setDialog: React.Dispatch<React.SetStateAction<DialogContent>>
+}
+
+// AllShifts
+
+export interface AllShiftsProps {
+  setDialog: React.Dispatch<React.SetStateAction<DialogContent>>
 }

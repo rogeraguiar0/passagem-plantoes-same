@@ -1,6 +1,8 @@
 import type { CardProps } from "../types";
+import { formatDateTime } from "../utils/date";
+import { DialogEntryDetail } from "./DialogEntryDetail";
 
-export function Card({ entry }: CardProps) {
+export function Card({ entry, setDialog }: CardProps) {
   const handlePriorityColor = (priority: number) => {
     switch (priority) {
       case 1:
@@ -23,11 +25,20 @@ export function Card({ entry }: CardProps) {
     }
   }
 
+  const openDialog = () => {
+    setDialog({
+      isOpen: true,
+      title: `Tipo: ${entry.type} | Evento em ${formatDateTime(entry.createdAt)}`,
+      children: <DialogEntryDetail entry={entry} />,
+      onClose: () => setDialog((prev) => ({ ...prev, isOpen: false }))
+    })
+  }
+
   return (
     <div className="flex gap-4 items-center">
-      <p className="caption-2 w-fit whitespace-nowrap">{new Date(entry.createdAt).toLocaleString()}</p>
+      <p className="caption-2 w-fit whitespace-nowrap">{formatDateTime(entry.createdAt)}</p>
 
-      <div className="flex gap-8 p-4 border border-gray-3 rounded-lg flex-1 max-w-2xl caption-1 h-50">
+      <button onClick={openDialog} className="cursor-pointer text-start flex gap-8 p-4 border border-gray-3 rounded-lg flex-1 max-w-2xl caption-1 h-50">
         <div className="flex justify-between flex-col gap-2 flex-1">
           <div>
             <h3 className="text-2 font-bold">Tipo: {entry.type}</h3>
@@ -43,7 +54,7 @@ export function Card({ entry }: CardProps) {
         <div className="flex-2">
           <p className="caption-1">{entry.description}</p>
         </div>
-      </div>
+      </button>
     </div>
   )
 }
