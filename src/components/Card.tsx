@@ -1,0 +1,60 @@
+import type { CardProps } from "../types";
+import { formatDateTime } from "../utils/date";
+import { DialogEntryDetail } from "./DialogEntryDetail";
+
+export function Card({ entry, setDialog }: CardProps) {
+  const handlePriorityColor = (priority: number) => {
+    switch (priority) {
+      case 1:
+        return "text-text"
+      case 2:
+        return "text-alert"
+      default:
+        return "text-success"
+    }
+  }
+
+  const handlePriorityText = (priority: number) => {
+    switch (priority) {
+      case 1:
+        return "Normal"
+      case 2:
+        return "Alta"
+      default:
+        return "Baixa"
+    }
+  }
+
+  const openDialog = () => {
+    setDialog({
+      isOpen: true,
+      title: `Tipo: ${entry.type} | Evento em ${formatDateTime(entry.createdAt)}`,
+      children: <DialogEntryDetail key={entry.id} entry={entry} />,
+      onClose: () => setDialog((prev) => ({ ...prev, isOpen: false }))
+    })
+  }
+
+  return (
+    <div className="flex gap-4 items-center">
+      <p className="caption-2 w-fit whitespace-nowrap">{formatDateTime(entry.createdAt)}</p>
+
+      <button onClick={openDialog} className="cursor-pointer text-start flex gap-8 p-4 border border-gray-3 rounded-lg flex-1 max-w-2xl caption-1 h-50">
+        <div className="flex justify-between flex-col gap-2 flex-1">
+          <div>
+            <h3 className="text-2 font-bold">Tipo: {entry.type}</h3>
+            <p>Prioridade: <span className={handlePriorityColor(entry.priority)}>{handlePriorityText(entry.priority)}</span></p>
+            <p>Plantonista: {entry.colaborator}</p>
+          </div>
+          <div>
+            {entry.healthInsurance && <p>Convênio: {entry.healthInsurance}</p>}
+            <p className="caption-1">Setor: {entry.sector}</p>
+            {entry.doctor && <p className="caption-1">Médico: {entry.doctor}</p>}
+          </div>
+        </div>
+        <div className="flex-2">
+          <p className="caption-1">{entry.description}</p>
+        </div>
+      </button>
+    </div>
+  )
+}

@@ -34,7 +34,7 @@ export function Select({
           id={selectId}
           aria-invalid={!!error}
           aria-describedby={error ? `${selectId}-error` : undefined}
-          className={`text-text-2 w-full appearance-none rounded-lg border bg-white py-2 pr-10 pl-3 text-grey-0 outline-none
+          className={`text-text-2 w-full appearance-none rounded-lg border bg-white py-1 pr-10 pl-2 text-grey-0 outline-none
       focus:border-brand focus:ring-2 focus:ring-brand-opacity
       disabled:cursor-not-allowed disabled:bg-grey-3/30
       ${error ? 'border-alert' : 'border-grey-3'} ${className}`}
