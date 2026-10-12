@@ -10,7 +10,8 @@ const shiftMock = [
     type: "Atendimento",
     priority: 2,
     colaborator: "Róger",
-    sector: "SAME",
+    healthInsurance: "SUS",
+    sector: "Recepção",
     description: "Criança trazida pelos pais sem documento por conta da urgência. Disse o CPF errado e a data de nascimento errada, impossibilidade de encontrar no sistema e equipe cobrando ficha, portanto, foi tirada à mão. Fluxo de atendimento alto durante a madrugada, ao tirar registro notei a incompatibilidade dos dados pois não havia informações no SP Data e nem no CADSUS.",
     status: "concluded",
     observations: [
@@ -19,6 +20,12 @@ const shiftMock = [
         colaborator: "Róger",
         createdAt: "2026-01-12T05:30:00",
         content: "Após várias tentativas com nome parcial do paciente e nome da mãe completo, consegui encontrar dados da criança pelo CADSUS, registro no SP Data completo"
+      },
+      {
+        id: "uuid2",
+        colaborator: "Róger",
+        createdAt: "2026-01-12T06:00:00",
+        content: "Guia SP Data anexada à ficha manual"
       }
     ]
   },

@@ -81,13 +81,13 @@ export function DialogEntryDetail({ entry }: DialogEntryDetailProps) {
             <p className="caption-1 text-black">{entry.description}</p>
           </div>
         </div>
-        <div className="flex flex-2 flex-col gap-4">
-          <div className="flex flex-col gap-2">
+        <div className="flex flex-2 flex-col gap-6">
+          <div className="flex flex-col gap-4">
             <p className="caption-1">Observações</p>
             {entry.observations && entry.observations.length > 0 ?
               (entry.observations.map((observation) => (
                 <div key={observation.id} className="flex flex-col gap-1">
-                  <p className="caption-1 text-black">{observation.content}</p>
+                  <p className="caption-1 text-black">- {observation.content}</p>
                   <p className="caption-2">
                     <User className="w-4 h-4 inline pr-0.5 pb-0.5" />
                     <span className="text-gray-0">

@@ -7,6 +7,7 @@ import { Dashboard } from "./pages/Dashboard"
 import { Options } from "./pages/Options"
 import { Dialog } from "./components/Dialog"
 import type { DialogContent } from "./types"
+import { Plus } from "lucide-react"
 
 function App() {
   // Dialog state management
@@ -27,11 +28,19 @@ function App() {
     <div className="flex">
       <Sidebar page={page} setPage={setPage} />
 
-      <main className="w-full h-screen overflow-auto flex justify-between">
-        {actualPage}
-      </main>
+      <div className="flex w-full h-screen overflow-y-scroll">
+        <main className="w-full h-full flex justify-between flex-10">
+          {actualPage}
+        </main>
 
-      <Dialog dialog={dialog} />
+        <Dialog dialog={dialog} />
+
+        <aside className="w-full flex-1 mt-20 pl-8">
+          <button className="bg-brand hover:bg-brand-opacity transition-colors p-2 rounded-lg text-white cursor-pointer">
+            <Plus />
+          </button>
+        </aside>
+      </div>
     </div>
   )
 }
