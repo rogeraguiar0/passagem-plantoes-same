@@ -64,3 +64,9 @@ export interface CardProps {
 export interface AllShiftsProps {
   setDialog: React.Dispatch<React.SetStateAction<DialogContent>>
 }
+
+// LastShift
+
+export interface LastShiftProps {
+  setDialog: React.Dispatch<React.SetStateAction<DialogContent>>
+}

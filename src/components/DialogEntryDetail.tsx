@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { DialogEntryDetailProps } from "../types";
 import { formatDateTime } from "../utils/date";
 import { Select } from "./Select";
-import { Check, SendHorizontal, X } from "lucide-react";
+import { Check, SendHorizontal, User, X } from "lucide-react";
 
 export function DialogEntryDetail({ entry }: DialogEntryDetailProps) {
   const [collaboratorToComment, setColaboratorToComment] = useState("")
@@ -82,13 +82,19 @@ export function DialogEntryDetail({ entry }: DialogEntryDetailProps) {
           </div>
         </div>
         <div className="flex flex-2 flex-col gap-4">
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-2">
             <p className="caption-1">Observações</p>
             {entry.observations && entry.observations.length > 0 ?
               (entry.observations.map((observation) => (
-                <div key={observation.id} className="flex flex-col">
-                  <p className="caption-2"><span className="text-gray-0">{observation.colaborator}</span> - {formatDateTime(observation.createdAt)}</p>
-                  <p className="caption-1">{observation.content}</p>
+                <div key={observation.id} className="flex flex-col gap-1">
+                  <p className="caption-1 text-black">{observation.content}</p>
+                  <p className="caption-2">
+                    <User className="w-4 h-4 inline pr-0.5 pb-0.5" />
+                    <span className="text-gray-0">
+                      {observation.colaborator}
+                    </span>
+                    - {formatDateTime(observation.createdAt)}
+                  </p>
                 </div>
               )))
               : (
@@ -98,7 +104,7 @@ export function DialogEntryDetail({ entry }: DialogEntryDetailProps) {
           {collaboratorToComment !== "" && (
             <div className="slide-down-in w-full flex gap-2">
               <textarea
-                className="w-full text-black caption-1 rounded-lg border bg-white px-2 py-1 text-grey-0 outline-none placeholder:text-gray-2 disabled:cursor-not-allowed disabled:bg-grey-3/30 resize-none h-32"
+                className="w-full text-black caption-1 rounded-lg border bg-white px-2 py-1 text-grey-0 outline-none placeholder:text-gray-2 disabled:cursor-not-allowed disabled:bg-grey-3/30 resize-none h-14"
                 placeholder="Insira sua observação..."
                 id="observation"
                 name="observation"

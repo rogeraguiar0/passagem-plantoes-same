@@ -2,10 +2,10 @@ import { useState } from "react"
 import { Card } from "../components/Card"
 import type { AllShiftsProps } from "../types"
 
-let entryMock = [
+const entryMock = [
   {
     id: "uuid1",
-    createdAt: "2026-01-10T19:40:00Z",
+    createdAt: "2026-01-10T19:40:00",
     type: "Internação",
     priority: 1,
     colaborator: "Róger",
@@ -18,7 +18,7 @@ let entryMock = [
       {
         id: "uuid1",
         colaborator: "Letícia",
-        createdAt: "2026-01-11T20:30:00Z",
+        createdAt: "2026-01-11T20:30:00",
         content: "Convenio aceitou a internação, paciente em leito"
       }
     ]
