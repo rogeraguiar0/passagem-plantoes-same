@@ -10,7 +10,7 @@ export function DialogNewEntry() {
 
   const entryCollaborator = [{ value: "marcilene", label: "Marcilene" }, { value: "marina", label: "Marina" }, { value: "julia", label: "Julia" }, { value: "yasnaia", label: "Yasnaia" }, { value: "Camila", label: "Camila" }, { value: "leticia", label: "Leticia" }, { value: "roger", label: "Róger" }]
 
-  const now = new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
+  const now = new Date().toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
 
   return (
     <div className="flex flex-col gap-2">
