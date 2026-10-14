@@ -36,7 +36,7 @@ export function Card({ entry, setDialog }: CardProps) {
 
   return (
     <div className="flex gap-4 items-center">
-      <p className="caption-2 w-fit whitespace-nowrap">{formatDateTime(entry.createdAt)}</p>
+      <p className="caption-2 min-w-fit w-30 whitespace-nowrap">{formatDateTime(entry.createdAt)}</p>
 
       <button onClick={openDialog} className="cursor-pointer text-start flex gap-8 p-4 border border-gray-3 rounded-lg flex-1 max-w-2xl caption-1 h-50">
         <div className="flex justify-between flex-col gap-2 flex-1">
