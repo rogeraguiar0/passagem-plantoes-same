@@ -8,10 +8,21 @@ import { Options } from "./pages/Options"
 import { Dialog } from "./components/Dialog"
 import type { DialogContent } from "./types"
 import { Plus } from "lucide-react"
+import { DialogNewEntry } from "./components/DialogNewEntry"
+import { formatDateTime } from "./utils/date"
 
 function App() {
   // Dialog state management
   const [dialog, setDialog] = useState<DialogContent>({ isOpen: false, onClose: () => setDialog((prev) => ({ ...prev, isOpen: false })) })
+
+  const newEntry = () => {
+    setDialog({
+      isOpen: true,
+      title: "Lançamento do plantão: " + formatDateTime(new Date()),
+      children: <DialogNewEntry />,
+      onClose: () => setDialog((prev) => ({ ...prev, isOpen: false }))
+    })
+  }
 
   // Page state management
   const [page, setPage] = useState("lastShift")
@@ -36,7 +47,9 @@ function App() {
         <Dialog dialog={dialog} />
 
         <aside className="w-full flex-1 mt-20 pl-8">
-          <button className="bg-brand hover:bg-brand-opacity transition-colors p-2 rounded-lg text-white cursor-pointer">
+          <button
+            className="bg-brand hover:bg-brand-opacity transition-colors p-2 rounded-lg text-white cursor-pointer"
+            onClick={newEntry}>
             <Plus />
           </button>
         </aside>
