@@ -1,10 +1,11 @@
 import { supabase } from "../lib/supabase"
+import { getShiftKey, type ShiftKey } from "../utils/date";
 
 export type ScheduleByDate = Record<string, { day: string[]; night: string[] }>
 
 const pad = (n: number) => String(n).padStart(2, "0")
 
-export async function getSchedule(year: number, month: number) { // month: 1 a 12
+export async function getSchedule(year: number, month: number) {
   const lastDay = new Date(year, month, 0).getDate()
 
   const { data, error } = await supabase
@@ -27,4 +28,29 @@ export async function getSchedule(year: number, month: number) { // month: 1 a 1
   }
 
   return byDate
+}
+
+export async function getOnDuty(value: string | Date = new Date()) {
+  const { shiftDate, period } = getShiftKey(value)
+
+  const { data, error } = await supabase
+    .from("schedule")
+    .select("collaborator:collaborators(id, name)")
+    .eq("shift_date", shiftDate)
+    .eq("period", period)
+
+  if (error) throw error
+
+  return data.flatMap((row) => (row.collaborator ? [row.collaborator] : []))
+}
+
+export async function getCollaboratorsOnShift({ shiftDate, period }: ShiftKey) {
+  const { data, error } = await supabase
+    .from("schedule")
+    .select("collaborator:collaborators(id, name)")
+    .eq("shift_date", shiftDate)
+    .eq("period", period)
+
+  if (error) throw error
+  return data.flatMap((row) => (row.collaborator ? [row.collaborator] : []))
 }
