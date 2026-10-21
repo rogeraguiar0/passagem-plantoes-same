@@ -1,64 +1,193 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Card } from "../components/Card"
-import type { AllShiftsProps } from "../types"
+import { Select } from "../components/Select"
+import { usePackage } from "../contexts/PackageContext"
+import { PAGE_SIZE, getEntriesPage } from "../services/entries"
+import { EMPTY_FILTERS, type AllShiftsProps, type EntryFilters, type FilteredEntry } from "../types"
 
-const entryMock = [
-  {
-    id: "uuid1",
-    createdAt: "2026-01-10T19:40:00",
-    type: "Internação",
-    priority: 1,
-    colaborator: "Róger",
-    sector: "SAME",
-    healthInsurance: "Unimed",
-    doctor: "Dr. Gente Boa",
-    description: "Convênio aceitou atendimento, mas negou a internação. Paciente aguardando leito.",
-    status: "concluded",
-    observations: [
-      {
-        id: "uuid1",
-        colaborator: "Letícia",
-        createdAt: "2026-01-11T20:30:00",
-        content: "Convenio aceitou a internação, paciente em leito"
-      }
-    ]
-  },
-  {
-    id: "uuid2",
-    createdAt: "2026-01-12T19:30:00Z",
-    type: "Aviso",
-    priority: 0,
-    colaborator: "Róger",
-    sector: "SAME",
-    description: "Solicitar pulseiras de identificação, papéis. Se possível solicitar também uma caneta azul e um marca texto laranja.",
-    status: "pending"
-  },
-  {
-    id: "uuid3",
-    createdAt: "2026-01-10T10:15:00Z",
-    type: "Internação",
-    priority: 2,
-    healthInsurance: "Notredame",
-    colaborator: "Camila",
-    sector: "SAME",
-    description: "Código do paciente não bateu com guia do convênio. Paciente orientado a aguardar contato do Hospital após regularização com convênio e médico responsável. Segue o número: 31999999999",
-    doctor: "Dr. Encrenca",
-    status: "pending"
-  }
+const TYPE_OPTIONS = [
+  { value: "", label: "Todos os tipos" },
+  { value: "internacao", label: "Internação" },
+  { value: "atendimento", label: "Atendimento" },
+  { value: "aviso", label: "Aviso" },
+  { value: "outros", label: "Outros" },
+]
+
+const STATUS_OPTIONS = [
+  { value: "", label: "Todos os status" },
+  { value: "pending", label: "Pendente" },
+  { value: "concluded", label: "Concluído" },
+]
+
+const toOptions = (placeholder: string, list: { id: string; name: string }[]) => [
+  { value: "", label: placeholder },
+  ...list.map((item) => ({ value: item.id, label: item.name })),
 ]
 
 export function AllShifts({ setDialog }: AllShiftsProps) {
-  const [shifts, setShifts] = useState(entryMock)
+  const { collaborators, sectors, healthInsurances } = usePackage()
+
+  const [filters, setFilters] = useState<EntryFilters>(EMPTY_FILTERS)
+  const [termInput, setTermInput] = useState("") // o que está digitado
+  const [page, setPage] = useState(0)
+  const [reloadKey, setReloadKey] = useState(0)
+
+  const [entries, setEntries] = useState<FilteredEntry[]>([])
+  const [total, setTotal] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+
+  const topRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      setFilters((f) => (f.term === termInput ? f : { ...f, term: termInput }))
+      setPage(0)
+    }, 400)
+    return () => clearTimeout(id)
+  }, [termInput])
+
+  useEffect(() => {
+    let cancelled = false
+    setLoading(true)
+    setError(false)
+
+    getEntriesPage(filters, page)
+      .then((result) => {
+        if (cancelled) return
+        setEntries(result.entries)
+        setTotal(result.total)
+      })
+      .catch(() => !cancelled && setError(true))
+      .finally(() => !cancelled && setLoading(false))
+
+    return () => {
+      cancelled = true
+    }
+  }, [filters, page, reloadKey])
+
+  const updateFilter = <K extends Exclude<keyof EntryFilters, "term">>(
+    key: K,
+    value: EntryFilters[K]
+  ) => {
+    setFilters((f) => ({ ...f, [key]: value }))
+    setPage(0)
+  }
+
+  const clearFilters = () => {
+    setTermInput("")
+    setFilters(EMPTY_FILTERS)
+    setPage(0)
+  }
+
+  const goToPage = (next: number) => {
+    setPage(next)
+    topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }
+
+  const reload = () => setReloadKey((k) => k + 1)
+
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+  const hasActiveFilters = termInput !== "" || Object.values(filters).some(Boolean)
 
   return (
-    <section className="flex flex-col gap-4 p-4">
+    <section ref={topRef} className="flex flex-col gap-4 p-4">
       <h1 className="title-3">Todos os Plantões</h1>
 
-      <ul className="pb-10 flex flex-col gap-10">
-        {shifts.map((shift) => (
-          <Card key={shift.id} entry={shift} setDialog={setDialog} />
-        ))}
-      </ul>
+      <div className="flex flex-col gap-2">
+        <input
+          type="search"
+          value={termInput}
+          onChange={(e) => setTermInput(e.target.value)}
+          placeholder="Buscar na descrição..."
+          className="caption-1 w-full rounded-lg border bg-white px-2 py-1 outline-none"
+        />
+
+        <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+          <input
+            type="date"
+            value={filters.date}
+            onChange={(e) => updateFilter("date", e.target.value)}
+            aria-label="Data"
+            className="caption-1 rounded-lg border bg-white px-2 py-1 outline-none"
+          />
+          <Select
+            value={filters.type}
+            onChange={(e) => updateFilter("type", e.target.value as EntryFilters["type"])}
+            options={TYPE_OPTIONS}
+          />
+          <Select
+            value={filters.status}
+            onChange={(e) => updateFilter("status", e.target.value as EntryFilters["status"])}
+            options={STATUS_OPTIONS}
+          />
+          <Select
+            value={filters.collaboratorId}
+            onChange={(e) => updateFilter("collaboratorId", e.target.value)}
+            options={toOptions("Todos os plantonistas", collaborators)}
+          />
+          <Select
+            value={filters.sectorId}
+            onChange={(e) => updateFilter("sectorId", e.target.value)}
+            options={toOptions("Todos os setores", sectors)}
+          />
+          <Select
+            value={filters.healthInsuranceId}
+            onChange={(e) => updateFilter("healthInsuranceId", e.target.value)}
+            options={toOptions("Todos os convênios", healthInsurances)}
+          />
+        </div>
+
+        <div className="flex items-center justify-between">
+          <p className="caption-1">
+            {loading && entries.length === 0 ? "Carregando..." : `${total} lançamento(s)`}
+          </p>
+          {hasActiveFilters && (
+            <button type="button" onClick={clearFilters} className="caption-1 cursor-pointer underline">
+              Limpar filtros
+            </button>
+          )}
+        </div>
+      </div>
+
+      {error ? (
+        <div role="alert" className="flex flex-col items-start gap-2">
+          <p className="text-alert">Não foi possível carregar os lançamentos.</p>
+          <button type="button" onClick={reload} className="cursor-pointer underline">
+            Tentar de novo
+          </button>
+        </div>
+      ) : entries.length === 0 && !loading ? (
+        <p className="caption-1">Nenhum lançamento encontrado.</p>
+      ) : (
+        <ul className={`flex flex-col gap-10 pb-6 transition-opacity ${loading ? "opacity-50" : ""}`}>
+          {entries.map((shift) => (
+            <Card key={shift.id} entry={shift} setDialog={setDialog} onChanged={reload} />
+          ))}
+        </ul>
+      )}
+
+      {totalPages > 1 && (
+        <nav aria-label="Paginação" className="flex items-center justify-center gap-4 pb-10">
+          <button
+            type="button"
+            onClick={() => goToPage(page - 1)}
+            disabled={page === 0 || loading}
+            className="cursor-pointer rounded-lg border px-3 py-1 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Anterior
+          </button>
+          <span className="caption-1">Página {page + 1} de {totalPages}</span>
+          <button
+            type="button"
+            onClick={() => goToPage(page + 1)}
+            disabled={page + 1 >= totalPages || loading}
+            className="cursor-pointer rounded-lg border px-3 py-1 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Próxima
+          </button>
+        </nav>
+      )}
     </section>
   )
 }
