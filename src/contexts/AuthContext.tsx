@@ -1,13 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 import type { Session } from "@supabase/supabase-js"
 import { supabase } from "../lib/supabase"
-
-type AuthContextValue = {
-  session: Session | null
-  loading: boolean
-  signIn: (keyword: string) => Promise<string | null> // devolve a mensagem de erro, ou null
-  signOut: () => Promise<void>
-}
+import type { AuthContextValue } from "../types"
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
