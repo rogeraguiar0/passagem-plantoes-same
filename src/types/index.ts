@@ -66,6 +66,34 @@ export interface Collaborator {
 
 // Shift Entry
 
+
+import type { Database } from "../types/database"
+
+type EntryType = Database["public"]["Enums"]["entry_type"]
+type EntryStatus = Database["public"]["Enums"]["entry_status"]
+
+export interface EntryFilters {
+  term: string
+  date: string // "2026-10-21" ou ""
+  type: EntryType | ""
+  status: EntryStatus | ""
+  collaboratorId: string
+  sectorId: string
+  healthInsuranceId: string
+  doctorId: string
+}
+
+export const EMPTY_FILTERS: EntryFilters = {
+  term: "",
+  date: "",
+  type: "",
+  status: "",
+  collaboratorId: "",
+  sectorId: "",
+  healthInsuranceId: "",
+  doctorId: "",
+}
+
 export interface Entry {
   id: string
   type: string
@@ -79,6 +107,26 @@ export interface Entry {
   description: string
   created_at: string
 }
+
+export interface FilteredEntry {
+  id: string;
+  type: "internacao" | "atendimento" | "aviso" | "outros";
+  status: "pending" | "concluded";
+  priority: number;
+  created_at: string;
+  description: string;
+  colaborator: string;
+  sector: string | undefined;
+  healthInsurance: string | undefined;
+  doctor: string | undefined;
+  observations: {
+    id: string;
+    content: string;
+    createdAt: string;
+    colaborator: string;
+  }[];
+}
+
 
 export interface ShiftEntry {
   id: string
@@ -114,6 +162,7 @@ export interface UpdateEntry {
 export interface CardProps {
   entry: ReturnType<typeof toEntry>
   setDialog: React.Dispatch<React.SetStateAction<DialogContent>>
+  onChanged: () => void
 }
 
 // AllShifts

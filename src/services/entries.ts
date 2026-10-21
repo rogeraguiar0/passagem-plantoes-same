@@ -1,5 +1,5 @@
 import { supabase } from "../lib/supabase";
-import type { Collaborator, Entry, ShiftEntry, UpdateEntry } from "../types";
+import type { EntryFilters, UpdateEntry } from "../types";
 import { previousShift, shiftRange, type ShiftKey } from "../utils/date";
 import { getCollaboratorsOnShift } from "./schedule";
 
@@ -52,6 +52,41 @@ export async function getShiftEntries(key: ShiftKey) {
   if (error) throw error
 
   return data.map(toEntry)
+}
+
+export const PAGE_SIZE = 20
+
+export async function getEntriesPage(filters: Partial<EntryFilters>, page: number) {
+
+  const escapeLike = (value: string) => value.replace(/[\\%_]/g, "\\$&")
+  const from = page * PAGE_SIZE
+  const to = from + PAGE_SIZE - 1
+
+  let query = supabase.from("entries").select(ENTRY_SELECT, { count: "exact" })
+
+  const term = filters.term?.trim()
+  if (term) query = query.ilike("description", `%${escapeLike(term)}%`)
+  if (filters.type) query = query.eq("type", filters.type)
+  if (filters.status) query = query.eq("status", filters.status)
+  if (filters.collaboratorId) query = query.eq("collaborator_id", filters.collaboratorId)
+  if (filters.sectorId) query = query.eq("sector_id", filters.sectorId)
+  if (filters.healthInsuranceId) query = query.eq("health_insurance_id", filters.healthInsuranceId)
+  if (filters.doctorId) query = query.eq("doctor_id", filters.doctorId)
+
+  if (filters.date) {
+    const start = new Date(`${filters.date}T00:00:00-03:00`)
+    const end = new Date(start.getTime() + 24 * 60 * 60 * 1000)
+    query = query.gte("occurred_at", start.toISOString()).lt("occurred_at", end.toISOString())
+  }
+
+  const { data, count, error } = await query
+    .order("occurred_at", { ascending: false })
+    .order("created_at", { ascending: false }) // desempate, mantém a paginação estável
+    .order("created_at", { referencedTable: "observations", ascending: true })
+    .range(from, to)
+
+  if (error) throw error
+  return { entries: data.map(toEntry), total: count ?? 0 }
 }
 
 export async function getLastShift(current: ShiftKey) {

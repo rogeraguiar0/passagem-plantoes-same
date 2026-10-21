@@ -2,7 +2,7 @@ import type { CardProps } from "../types";
 import { formatDateTime } from "../utils/date";
 import { DialogEntryDetail } from "./DialogEntryDetail";
 
-export function Card({ entry, setDialog }: CardProps) {
+export function Card({ entry, setDialog, onChanged }: CardProps) {
   const handlePriorityColor = (priority: number) => {
     switch (priority) {
       case 1:
