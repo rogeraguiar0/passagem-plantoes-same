@@ -1,16 +1,21 @@
 import { Input } from "./Input";
 import { Select } from "./Select";
+import { usePackage } from "../contexts/PackageContext";
 
 export function DialogNewEntry() {
+  const { collaborators, sectors } = usePackage()
+
+  const dataToSelect = (data: { id: string, name: string }[]) => {
+    const dataToSelect = data.flatMap((item) => ({ value: item.id, label: item.name }))
+
+    return dataToSelect
+  }
+
   const entryType = [{ value: "aviso", label: "Aviso" }, { value: "atendimento", label: "Atendimento" }, { value: "portaria", label: "Portaria" }, { value: "internacao", label: "Internação" }, { value: "outros", label: "Outros" }]
 
   const entryPriority = [{ value: "1", label: "Normal" }, { value: "0", label: "Baixo" }, { value: "2", label: "Alto" }]
 
-  const entrySector = [{ value: "same", label: "SAME" }, { value: "recepcao", label: "Recepção" }, { value: "pa", label: "PA (Pronto Atendimento)" }, { value: "cm", label: "Clínica Médica" }, { value: "outros", label: "Outros" }]
-
-  const entryCollaborator = [{ value: "marcilene", label: "Marcilene" }, { value: "marina", label: "Marina" }, { value: "julia", label: "Julia" }, { value: "yasnaia", label: "Yasnaia" }, { value: "Camila", label: "Camila" }, { value: "leticia", label: "Leticia" }, { value: "roger", label: "Róger" }]
-
-  const now = new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
+  const now = new Date().toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
 
   return (
     <div className="flex flex-col gap-2">
@@ -19,11 +24,10 @@ export function DialogNewEntry() {
           <div className="flex flex-col gap-2">
             <Select label="Tipo" options={entryType} />
             <Select label="Prioridade" options={entryPriority} />
-            <Select label="Setor" options={entrySector} />
+            <Select label="Setor" options={dataToSelect(sectors)} />
           </div>
           <div className="flex flex-col gap-2">
-            <Select label="Plantonista" options={entryCollaborator} />
-            <Input label="Médico" placeholder="Dr. Fulano" />
+            <Select label="Plantonista" options={dataToSelect(collaborators)} />
           </div>
         </div>
         <div>

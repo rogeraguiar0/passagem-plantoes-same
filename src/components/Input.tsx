@@ -21,7 +21,7 @@ export function Input({ label, error, className = '', id, ...props }: InputProps
         id={inputId}
         aria-invalid={!!error}
         aria-describedby={error ? `${inputId}-error` : undefined}
-        className={`w-full text-black text-[16px] rounded-lg border bg-white px-2 py-1 text-grey-0 outline-none placeholder:text-gray-2 disabled:cursor-not-allowed disabled:bg-grey-3/30 ${error ? 'border-alert' : 'border-grey-3'} ${className}`}
+        className={`w-full text-[16px] rounded-lg border bg-white px-2 py-1 text-gray-0 outline-none placeholder:text-gray-2 disabled:cursor-not-allowed disabled:bg-grey-3/30 ${error ? 'border-alert' : 'border-gray-3'} ${className}`}
         {...props}
       />
 
