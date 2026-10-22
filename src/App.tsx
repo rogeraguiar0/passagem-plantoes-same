@@ -12,14 +12,17 @@ import { DialogNewEntry } from "./components/DialogNewEntry"
 import { formatDateTime } from "./utils/date"
 
 function App() {
+  const closeDialog = () => setDialog((prev) => ({ ...prev, isOpen: false }))
+
   // Dialog state management
-  const [dialog, setDialog] = useState<DialogContent>({ isOpen: false, onClose: () => setDialog((prev) => ({ ...prev, isOpen: false })) })
+  const [dialog, setDialog] = useState<DialogContent>({ isOpen: false, onClose: closeDialog })
+
 
   const newEntry = () => {
     setDialog({
       isOpen: true,
       title: "Lançamento do plantão: " + formatDateTime(new Date()),
-      children: <DialogNewEntry />,
+      children: <DialogNewEntry onClose={closeDialog} />,
       onClose: () => setDialog((prev) => ({ ...prev, isOpen: false }))
     })
   }

@@ -4,7 +4,7 @@ import type { LastShiftProps } from "../types"
 import { usePackage } from "../contexts/PackageContext"
 
 export function LastShift({ setDialog }: LastShiftProps) {
-  const { lastShiftEntries, actualShiftCollaborators } = usePackage()
+  const { lastShiftEntries, lastShiftCollaborators } = usePackage()
 
   const getTitle = () => {
     const SHIFT_LABEL = {
@@ -20,7 +20,7 @@ export function LastShift({ setDialog }: LastShiftProps) {
   }
 
   const formatCollaborators = () => {
-    const text = actualShiftCollaborators.map((collaborator) => collaborator.name + " - ").join("")
+    const text = lastShiftCollaborators.map((collaborator) => collaborator.name + " - ").join("")
 
     return text.slice(0, text.length - 2)
   }

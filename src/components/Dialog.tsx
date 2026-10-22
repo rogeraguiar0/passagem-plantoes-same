@@ -23,9 +23,9 @@ export function Dialog({ dialog }: DialogProps) {
       onClick={(e) => {
         if (e.target === ref.current) closeDialog()
       }}
-      className="animated-dialog m-auto w-fit max-w-4xl rounded-2xl bg-white p-0 shadow-xl"
+      className="animated-dialog m-auto rounded-2xl bg-white p-0 shadow-xl"
     >
-      <div className="flex flex-col max-h-124">
+      <div className="flex flex-col h-[90vh] max-w-[80vw]">
         <header className="p-4 gap-4 flex items-center justify-between border-b border-gray-3">
           {dialog.title && <h2 className="text-1 font-bold whitespace-nowrap">{dialog.title}</h2>}
           <button
