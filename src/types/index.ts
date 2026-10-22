@@ -33,6 +33,27 @@ export interface DialogContent {
   onClose?: () => void
 }
 
+// RichText
+
+export interface RichTextEditorProps {
+  label: string
+  placeholder?: string
+  value?: string
+  onChange: (html: string) => void
+  className?: string
+}
+
+// Tabs
+
+type TabItem<T extends string> = { id: T; label: React.ReactNode; panel: React.ReactNode }
+
+export interface TabsProps<T extends string> {
+  label: string
+  tabs: TabItem<T>[]
+  value: T
+  onChange: (id: T) => void
+}
+
 // Sector
 
 export interface Sector {
@@ -66,15 +87,24 @@ export interface Collaborator {
 
 // Shift Entry
 
-
 import type { Database } from "../types/database"
 
 type EntryType = Database["public"]["Enums"]["entry_type"]
 type EntryStatus = Database["public"]["Enums"]["entry_status"]
 
+export interface NewEntryInput {
+  type: EntryType
+  priority: number
+  collaboratorId: string
+  sectorId: string | null
+  healthInsuranceId: string | null
+  occurredAt: string
+  description: string
+}
+
 export interface EntryFilters {
   term: string
-  date: string // "2026-10-21" ou ""
+  date: string
   type: EntryType | ""
   status: EntryStatus | ""
   collaboratorId: string
@@ -105,6 +135,7 @@ export interface Entry {
   doctor_id: string
   ocurred_at: string
   description: string
+  descriptionText: string
   created_at: string
 }
 
@@ -115,6 +146,7 @@ export interface FilteredEntry {
   priority: number;
   created_at: string;
   description: string;
+  descriptionText: string | null;
   colaborator: string;
   sector: string | undefined;
   healthInsurance: string | undefined;
@@ -188,9 +220,13 @@ export interface AuthContextValue {
 
 export interface PackageContextValue {
   loading: boolean
+  error: boolean
+  retry: () => void
+  reload: () => Promise<void>
   collaborators: Collaborator[]
-  actualShiftCollaborators: Collaborator[]
   sectors: Sector[]
   healthInsurances: HealthInsurance[]
   lastShiftEntries: ReturnType<typeof toEntry>[]
+  lastShiftCollaborators: Collaborator[]
+  currentShiftCollaborators: Collaborator[]
 }

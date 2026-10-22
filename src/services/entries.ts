@@ -1,10 +1,10 @@
 import { supabase } from "../lib/supabase";
-import type { EntryFilters, UpdateEntry } from "../types";
+import type { EntryFilters, NewEntryInput, UpdateEntry } from "../types";
 import { previousShift, shiftRange, type ShiftKey } from "../utils/date";
 import { getCollaboratorsOnShift } from "./schedule";
 
 export const ENTRY_SELECT = `
-  id, type, status, priority, occurred_at, description,
+  id, type, status, priority, occurred_at, description, description_text,
   collaborator:collaborators(name),
   sector:sectors(name),
   health_insurance:health_insurances(name),
@@ -25,6 +25,7 @@ export function toEntry(row: EntryRow) {
     priority: row.priority,
     created_at: row.occurred_at,
     description: row.description,
+    descriptionText: row.description_text,
     colaborator: row.collaborator?.name,
     sector: row.sector?.name,
     healthInsurance: row.health_insurance?.name,
@@ -112,6 +113,20 @@ export async function postObservation(content: string, collaborator_id: string, 
   if (error) throw error
 
   return data
+}
+
+export async function createEntry(input: NewEntryInput) {
+  const { error } = await supabase.from("entries").insert({
+    type: input.type,
+    priority: input.priority,
+    collaborator_id: input.collaboratorId,
+    sector_id: input.sectorId,
+    health_insurance_id: input.healthInsuranceId,
+    occurred_at: input.occurredAt,
+    description: input.description,
+  })
+
+  if (error) throw error
 }
 
 export async function updateEntry(entry: UpdateEntry) {
