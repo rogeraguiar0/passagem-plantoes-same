@@ -1,7 +1,6 @@
 // Sidebar
 
 import type { Session } from "@supabase/supabase-js"
-import type { getShiftKey } from "../utils/date"
 import type { toEntry } from "../services/entries"
 
 export interface SidebarProps {
@@ -24,6 +23,7 @@ export interface DialogProps {
 
 export interface DialogEntryDetailProps {
   entry: ReturnType<typeof toEntry>
+  onChanged?: () => void
 }
 
 export interface DialogContent {
@@ -162,7 +162,7 @@ export interface UpdateEntry {
 export interface CardProps {
   entry: ReturnType<typeof toEntry>
   setDialog: React.Dispatch<React.SetStateAction<DialogContent>>
-  onChanged: () => void
+  onChanged?: () => void
 }
 
 // AllShifts

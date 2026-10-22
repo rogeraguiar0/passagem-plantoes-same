@@ -29,7 +29,7 @@ export function Card({ entry, setDialog, onChanged }: CardProps) {
     setDialog({
       isOpen: true,
       title: `Tipo: ${entry.type} | Evento em ${formatDateTime(entry.created_at)}`,
-      children: <DialogEntryDetail key={entry.id} entry={entry} />,
+      children: <DialogEntryDetail key={entry.id} entry={entry} onChanged={onChanged} />,
       onClose: () => setDialog(() => ({ isOpen: false }))
     })
   }
