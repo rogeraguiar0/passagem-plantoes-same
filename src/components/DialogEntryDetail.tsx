@@ -8,7 +8,7 @@ import { usePackage } from "../contexts/PackageContext";
 
 const STATUS_LABEL = { pending: "Pendente", concluded: "Concluído" } as const
 
-export function DialogEntryDetail({ entry }: DialogEntryDetailProps) {
+export function DialogEntryDetail({ entry, onChanged }: DialogEntryDetailProps) {
   const [current, setCurrent] = useState(entry)
 
   const refresh = useCallback(async () => {
@@ -49,35 +49,50 @@ export function DialogEntryDetail({ entry }: DialogEntryDetailProps) {
     }
   }
 
-  const [savedStatus, setSavedStatus] = useState(current.status)
   const [statusValue, setStatusValue] = useState(current.status)
   const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
-  const hasChanges = statusValue !== savedStatus
+  const hasChanges = statusValue !== current.status
 
   const cancelChanges = () => {
-    setStatusValue(savedStatus)
+    setStatusValue(current.status)
+    setSaveError(null)
   }
 
-  const confirmChanges = () => {
-    setStatusValue(savedStatus)
+  const confirmChanges = async () => {
+    setSaving(true)
+    setSaveError(null)
     try {
-      setSaving(true)
-      updateEntry({ id: current.id, status: statusValue })
+      await updateEntry({ id: current.id, status: statusValue })
+      setCurrent((prev) => ({ ...prev, status: statusValue })) // a barra some na hora
+      await refresh()
+      onChanged?.()
     } catch {
-      console.log("Erro ao mudar Status do Lançamento")
+      setSaveError("Não foi possível salvar. Tente novamente.")
     } finally {
       setSaving(false)
-      refresh()
     }
   }
 
   const [observation, setObservation] = useState("")
 
-  const submitObservation = () => {
-    postObservation(observation, collaboratorToComment, current.id)
-    setObservation("")
-    refresh()
+  const submitObservation = async () => {
+    const text = observation.trim()
+    if (!text || !collaboratorToComment) return
+
+    setSaving(true)
+    setSaveError(null)
+    try {
+      await postObservation(text, collaboratorToComment, current.id)
+      setObservation("")
+      await refresh()
+      onChanged?.()
+    } catch {
+      setSaveError("Não foi possível enviar a observação.")
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -196,7 +211,7 @@ export function DialogEntryDetail({ entry }: DialogEntryDetailProps) {
             {hasChanges && (
               <div className="slide-down-in flex flex-col items-end gap-2">
                 <p className="caption-1">
-                  Alterar de <strong>{STATUS_LABEL[savedStatus]}</strong> para{" "}
+                  Alterar de <strong>{STATUS_LABEL[current.status]}</strong> para{" "}
                   <strong>{STATUS_LABEL[statusValue]}</strong>?
                 </p>
                 <div className="flex gap-2">
@@ -217,6 +232,8 @@ export function DialogEntryDetail({ entry }: DialogEntryDetailProps) {
                     {saving ? "Salvando..." : "Confirmar"}
                   </button>
                 </div>
+
+                {saveError && <p role="alert" className="caption-1 text-alert">{saveError}</p>}
               </div>
             )}
           </div>
