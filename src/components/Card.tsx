@@ -51,8 +51,8 @@ export function Card({ entry, setDialog, onChanged }: CardProps) {
             {entry.doctor && <p className="caption-1">Médico: {entry.doctor}</p>}
           </div>
         </div>
-        <div className="flex-2">
-          <p className="caption-1">{entry.description}</p>
+        <div className="flex-2 min-w-0">
+          <p className="caption-1 line-clamp-6 wrap:anywhere">{entry.descriptionText}</p>
         </div>
       </button>
     </div>

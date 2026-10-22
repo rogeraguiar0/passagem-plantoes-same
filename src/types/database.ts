@@ -131,6 +131,7 @@ export type Database = {
           collaborator_id: string
           created_at: string
           description: string
+          description_text: string | null
           doctor_id: string | null
           health_insurance_id: string | null
           id: string
@@ -144,6 +145,7 @@ export type Database = {
           collaborator_id: string
           created_at?: string
           description: string
+          description_text?: string | null
           doctor_id?: string | null
           health_insurance_id?: string | null
           id?: string
@@ -157,6 +159,7 @@ export type Database = {
           collaborator_id?: string
           created_at?: string
           description?: string
+          description_text?: string | null
           doctor_id?: string | null
           health_insurance_id?: string | null
           id?: string

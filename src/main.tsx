@@ -6,13 +6,16 @@ import App from './App.tsx'
 import { AuthProvider } from './contexts/AuthContext.tsx'
 import { AuthGate } from './components/AuthGate.tsx'
 import { PackageProvider } from './contexts/PackageContext.tsx'
+import { PackageGate } from './components/PackageGate.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
       <AuthGate>
         <PackageProvider>
-          <App />
+          <PackageGate>
+            <App />
+          </PackageGate>
         </PackageProvider>
       </AuthGate>
     </AuthProvider>

@@ -1,42 +1,76 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { type Collaborator, type HealthInsurance, type Sector, type PackageContextValue } from "../types";
-import { getCollaborators } from "../services/collaborator";
-import { getSectors } from "../services/sectors";
-import { getHealthInsurance } from "../services/healthInsurance";
-import { getLastShift, toEntry } from "../services/entries";
-import { getShiftKey } from "../utils/date";
+// src/contexts/PackageContext.tsx
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react"
+import type { Collaborator, HealthInsurance, Sector, PackageContextValue } from "../types"
+import { getCollaborators } from "../services/collaborator"
+import { getSectors } from "../services/sectors"
+import { getHealthInsurance } from "../services/healthInsurance"
+import { getCollaboratorsOnShift } from "../services/schedule"
+import { getLastShift, toEntry } from "../services/entries"
+import { getShiftKey } from "../utils/date"
 
 const PackageContext = createContext<PackageContextValue | null>(null)
 
 export function PackageProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+
   const [collaborators, setCollaborators] = useState<Collaborator[]>([])
-  const [actualShiftCollaborators, setActualShiftCollaborators] = useState<Collaborator[]>([])
   const [sectors, setSectors] = useState<Sector[]>([])
   const [healthInsurances, setHealthInsurances] = useState<HealthInsurance[]>([])
+
   const [lastShiftEntries, setLastShiftEntries] = useState<ReturnType<typeof toEntry>[]>([])
+  const [lastShiftCollaborators, setLastShiftCollaborators] = useState<Collaborator[]>([])
+  const [currentShiftCollaborators, setCurrentShiftCollaborators] = useState<Collaborator[]>([])
 
-  useEffect(() => {
+  const fetchShiftData = useCallback(async () => {
     const shiftKey = getShiftKey()
+    const [last, current] = await Promise.all([
+      getLastShift(shiftKey),
+      getCollaboratorsOnShift(shiftKey),
+    ])
+    setLastShiftEntries(last.entries)
+    setLastShiftCollaborators(last.team)
+    setCurrentShiftCollaborators(current)
+  }, [])
 
+  const reload = useCallback(async () => {
     try {
-      getLastShift(shiftKey).then((data) => {
-        setLastShiftEntries(data.entries)
-        setActualShiftCollaborators(data.team)
-      })
-      getCollaborators().then((data) => setCollaborators(data))
-      getSectors().then((data) => setSectors(data))
-      getHealthInsurance().then((data) => setHealthInsurances(data))
+      await fetchShiftData()
     } catch {
-      throw new Error("Erro ao iniciar aplicação")
+    }
+  }, [fetchShiftData])
+
+  const loadAll = useCallback(async () => {
+    setLoading(true)
+    setError(false)
+    try {
+      const [c, s, h] = await Promise.all([
+        getCollaborators(),
+        getSectors(),
+        getHealthInsurance(),
+        fetchShiftData(),
+      ])
+      setCollaborators(c)
+      setSectors(s)
+      setHealthInsurances(h)
+    } catch {
+      setError(true)
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [fetchShiftData])
+
+  useEffect(() => {
+    loadAll()
+  }, [loadAll])
 
   return (
     <PackageContext.Provider
-      value={{ loading, collaborators, actualShiftCollaborators, sectors, healthInsurances, lastShiftEntries }}
+      value={{
+        loading, error, retry: loadAll, reload,
+        collaborators, sectors, healthInsurances,
+        lastShiftEntries, lastShiftCollaborators, currentShiftCollaborators,
+      }}
     >
       {children}
     </PackageContext.Provider>
