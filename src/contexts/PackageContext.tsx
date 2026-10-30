@@ -5,7 +5,7 @@ import { getCollaborators } from "../services/collaborator"
 import { getSectors } from "../services/sectors"
 import { getHealthInsurance } from "../services/healthInsurance"
 import { getCollaboratorsOnShift } from "../services/schedule"
-import { getLastShift, toEntry } from "../services/entries"
+import { getLastShift, getShiftEntries, toEntry } from "../services/entries"
 import { getShiftKey } from "../utils/date"
 
 const PackageContext = createContext<PackageContextValue | null>(null)
@@ -20,17 +20,20 @@ export function PackageProvider({ children }: { children: ReactNode }) {
 
   const [lastShiftEntries, setLastShiftEntries] = useState<ReturnType<typeof toEntry>[]>([])
   const [lastShiftCollaborators, setLastShiftCollaborators] = useState<Collaborator[]>([])
+  const [currentShiftEntries, setCurrentShiftEntries] = useState<ReturnType<typeof toEntry>[]>([])
   const [currentShiftCollaborators, setCurrentShiftCollaborators] = useState<Collaborator[]>([])
 
   const fetchShiftData = useCallback(async () => {
     const shiftKey = getShiftKey()
-    const [last, current] = await Promise.all([
+    const [lastEntries, currentEntries, currentCollaborators] = await Promise.all([
       getLastShift(shiftKey),
+      getShiftEntries(shiftKey),
       getCollaboratorsOnShift(shiftKey),
     ])
-    setLastShiftEntries(last.entries)
-    setLastShiftCollaborators(last.team)
-    setCurrentShiftCollaborators(current)
+    setLastShiftEntries(lastEntries.entries)
+    setLastShiftCollaborators(lastEntries.team)
+    setCurrentShiftEntries(currentEntries)
+    setCurrentShiftCollaborators(currentCollaborators)
   }, [])
 
   const reload = useCallback(async () => {
@@ -69,7 +72,8 @@ export function PackageProvider({ children }: { children: ReactNode }) {
       value={{
         loading, error, retry: loadAll, reload,
         collaborators, sectors, healthInsurances,
-        lastShiftEntries, lastShiftCollaborators, currentShiftCollaborators,
+        lastShiftEntries, lastShiftCollaborators,
+        currentShiftEntries, currentShiftCollaborators,
       }}
     >
       {children}

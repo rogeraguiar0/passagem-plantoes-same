@@ -19,6 +19,9 @@ export function Sidebar({ page, setPage }: SidebarProps) {
             <button className={handleButtonColor("lastShift")} onClick={() => setPage("lastShift")}>
               Último Plantão
             </button>
+            <button className={handleButtonColor("myShift")} onClick={() => setPage("myShift")}>
+              Meu Plantão
+            </button>
             <button className={handleButtonColor("allShifts")} onClick={() => setPage("allShifts")}>
               Todos os Plantões
             </button>
