@@ -21,7 +21,7 @@ export function Tabs<T extends string>({ label, tabs, value, onChange }: TabsPro
   }
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 h-full">
       <div role="tablist" aria-label={label} className="flex gap-4 border-b border-gray-3">
         {tabs.map((tab, i) => {
           const selected = tab.id === value

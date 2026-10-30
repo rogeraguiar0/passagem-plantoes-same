@@ -25,7 +25,7 @@ export function Dialog({ dialog }: DialogProps) {
       }}
       className="animated-dialog m-auto rounded-2xl bg-white p-0 shadow-xl"
     >
-      <div className="flex flex-col min-h-133 max-h-[90vh] max-w-[80vw]">
+      <div className="flex flex-col min-h-133 max-h-[90vh] w-[80vw]">
         <header className="p-4 gap-4 flex items-center justify-between border-b border-gray-3">
           {dialog.title && <h2 className="text-1 font-bold whitespace-nowrap">{dialog.title}</h2>}
           <button

@@ -13,7 +13,7 @@ import { formatDateTime } from "./utils/date"
 import { MyShift } from "./pages/MyShift"
 
 function App() {
-  const closeDialog = () => setDialog((prev) => ({ ...prev, isOpen: false }))
+  const closeDialog = () => setDialog(() => ({ isOpen: false, children: null, onClose: closeDialog }))
 
   // Dialog state management
   const [dialog, setDialog] = useState<DialogContent>({ isOpen: false, onClose: closeDialog })
