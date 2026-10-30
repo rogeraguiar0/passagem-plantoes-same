@@ -10,9 +10,10 @@ import type { DialogContent } from "./types"
 import { Plus } from "lucide-react"
 import { DialogNewEntry } from "./components/DialogNewEntry"
 import { formatDateTime } from "./utils/date"
+import { MyShift } from "./pages/MyShift"
 
 function App() {
-  const closeDialog = () => setDialog((prev) => ({ ...prev, isOpen: false }))
+  const closeDialog = () => setDialog(() => ({ isOpen: false, children: null, onClose: closeDialog }))
 
   // Dialog state management
   const [dialog, setDialog] = useState<DialogContent>({ isOpen: false, onClose: closeDialog })
@@ -23,7 +24,10 @@ function App() {
       isOpen: true,
       title: "Lançamento do plantão: " + formatDateTime(new Date()),
       children: <DialogNewEntry onClose={closeDialog} />,
-      onClose: () => setDialog((prev) => ({ ...prev, isOpen: false }))
+      onClose: () => {
+        setDialog((prev) => ({ ...prev, isOpen: false }))
+        setPage("myShift")
+      }
     })
   }
 
@@ -32,6 +36,7 @@ function App() {
 
   const pages: Record<string, JSX.Element> = {
     lastShift: <LastShift setDialog={setDialog} />,
+    myShift: <MyShift setDialog={setDialog} />,
     allShifts: <AllShifts setDialog={setDialog} />,
     dashboard: <Dashboard />,
     options: <Options />

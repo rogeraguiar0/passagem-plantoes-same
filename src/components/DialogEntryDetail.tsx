@@ -197,7 +197,7 @@ export function DialogEntryDetail({ entry, onChanged }: DialogEntryDetailProps) 
   )
 
   const observations = (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col justify-between gap-3">
       <ul ref={listRef} className="flex max-h-64 flex-col gap-4 overflow-y-auto pr-1">
         {observationList.length > 0 ? (
           observationList.map((o) => (
@@ -244,7 +244,7 @@ export function DialogEntryDetail({ entry, onChanged }: DialogEntryDetailProps) 
   )
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 flex-1">
       <div className="flex items-center justify-between gap-4">
         <p>Prioridade: <span className={handlePriorityColor(current.priority)}>{handlePriorityText(current.priority)}</span></p>
         <Select onChange={(e) => setColaboratorToComment(e.target.value)} options={collaboratorOptions} />

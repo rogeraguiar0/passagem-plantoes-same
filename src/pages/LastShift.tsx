@@ -29,7 +29,7 @@ export function LastShift({ setDialog }: LastShiftProps) {
     <section className="flex flex-col gap-4 p-4">
       <div>
         <h1 className="title-3">Último Plantão: {getTitle()}</h1>
-        <p className="caption-1">Plantonistas: {formatCollaborators()}</p>
+        <p className="caption-1">Plantonista{lastShiftCollaborators.length > 1 ? "s" : ""}: {formatCollaborators()}</p>
       </div>
 
       <ul className="pb-10 flex flex-col gap-10">

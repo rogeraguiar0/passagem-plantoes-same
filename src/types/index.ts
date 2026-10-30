@@ -209,6 +209,10 @@ export interface LastShiftProps {
   setDialog: React.Dispatch<React.SetStateAction<DialogContent>>
 }
 
+export interface MyShiftProps {
+  setDialog: React.Dispatch<React.SetStateAction<DialogContent>>
+}
+
 // Context
 
 export interface AuthContextValue {
@@ -228,5 +232,6 @@ export interface PackageContextValue {
   healthInsurances: HealthInsurance[]
   lastShiftEntries: ReturnType<typeof toEntry>[]
   lastShiftCollaborators: Collaborator[]
+  currentShiftEntries: ReturnType<typeof toEntry>[]
   currentShiftCollaborators: Collaborator[]
 }
